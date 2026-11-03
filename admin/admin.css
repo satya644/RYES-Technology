@@ -491,3 +491,17 @@ label { display: block; font-size: 13px; color: var(--mut); margin-bottom: 4px; 
     padding: 24px 18px;
   }
 }
+
+input[type="file"] {
+  background: #090D18;
+  border: 1px dashed #2A3654;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  color: var(--text);
+  width: 100%;
+  font-size: 13.5px;
+}
+input[type="file"]:hover {
+  border-color: var(--blue);
+}
