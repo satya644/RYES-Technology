@@ -19,4 +19,5 @@ Thumbs.db
 *.log
 .vscode/
 .idea/
+push_to_github.bat
 
