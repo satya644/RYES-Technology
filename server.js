@@ -128,12 +128,21 @@ app.use(helmet({
   crossOriginResourcePolicy: { policy: "cross-origin" }
 }));
 const allowedOrigins = (CORS_ORIGIN || '').split(',').map(s => s.trim()).filter(Boolean);
+const isAllowedOrigin = origin => {
+  if (!origin) return true;
+  if (allowedOrigins.includes(origin)) return true;
+  if (/^http:\/\/(localhost|127\.0\.0\.1|\d+\.\d+\.\d+\.\d+)(:\d+)?$/.test(origin)) return true;
+  try {
+    const host = new URL(origin).hostname;
+    if (host.endsWith('github.io') || host.endsWith('onrender.com') || host.endsWith('vercel.app')) return true;
+  } catch {}
+  return false;
+};
+
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin) || /^http:\/\/(localhost|127\.0\.0\.1|\d+\.\d+\.\d+\.\d+)(:\d+)?$/.test(origin)) {
-      return callback(null, true);
-    }
-    return callback(new Error('Not allowed by CORS'));
+    if (isAllowedOrigin(origin)) return callback(null, true);
+    return callback(new Error('Not allowed by CORS: ' + origin));
   },
   credentials: true
 }));

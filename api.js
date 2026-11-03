@@ -1,10 +1,14 @@
 // Frontend se backend (MongoDB API) tak ka connection.
-// Computer/Phone par port 5000, aur production cloud (Render/Domain) par automatically origin se connect hota hai.
+// Computer/Phone par port 5000, GitHub Pages par Render backend URL, aur Render par origin se connect hota hai.
+export const RENDER_BACKEND_URL = "https://ryes-technology.onrender.com";
+
 export const API_BASE = (typeof window !== "undefined")
   ? (window.RYES_API_BASE ||
      (window.location.hostname === "localhost" || /^\d+\.\d+\.\d+\.\d+$/.test(window.location.hostname)
        ? `${window.location.protocol}//${window.location.hostname}:5000/api`
-       : `${window.location.origin}/api`))
+       : (window.location.hostname.endsWith("github.io")
+           ? `${RENDER_BACKEND_URL}/api`
+           : `${window.location.origin}/api`)))
   : "http://localhost:5000/api";
 
 const TOKEN_KEY = "ryes_admin_token";

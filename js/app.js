@@ -322,12 +322,14 @@ function renderPortfolioCards(items, selectedCategory) {
     const ytId = extractYouTubeId(mediaUrl);
     const isVideoFile = mediaUrl.startsWith("/uploads/") || /\.(mp4|webm|mov|mkv|m4v)$/i.test(mediaUrl);
 
-    // Resolve full video URL if relative (works on localhost, LAN IP, and production cloud)
+    // Resolve full video URL if relative (works on localhost, LAN IP, GitHub Pages, and Render)
     const fullMediaUrl = mediaUrl.startsWith("http")
       ? mediaUrl
       : (window.location.hostname === "localhost" || /^\d+\.\d+\.\d+\.\d+$/.test(window.location.hostname)
           ? `${window.location.protocol}//${window.location.hostname}:5000${mediaUrl}`
-          : `${window.location.origin}${mediaUrl}`);
+          : (window.location.hostname.endsWith("github.io")
+              ? `https://ryes-technology.onrender.com${mediaUrl}`
+              : `${window.location.origin}${mediaUrl}`));
 
     const itemTitle = isHi
       ? (item.title_hi || item.title_en || "Project Preview")
