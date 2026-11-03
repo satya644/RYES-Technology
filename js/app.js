@@ -371,7 +371,12 @@ function renderPortfolioCards(items, selectedCategory) {
       const thumbImg = document.createElement("img");
       thumbImg.loading = "lazy";
       thumbImg.alt = itemTitle;
-      thumbImg.src = fullThumbUrl || "https://images.unsplash.com/photo-1547658719-da2b51169166?auto=format&fit=crop&w=800&q=80";
+      const defaultMockup = "https://images.unsplash.com/photo-1547658719-da2b51169166?auto=format&fit=crop&w=800&q=80";
+      thumbImg.src = fullThumbUrl || defaultMockup;
+      thumbImg.onerror = () => {
+        thumbImg.onerror = null;
+        thumbImg.src = defaultMockup;
+      };
       mediaBox.appendChild(thumbImg);
 
       if (mediaUrl) {

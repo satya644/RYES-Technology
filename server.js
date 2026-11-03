@@ -125,19 +125,17 @@ const upload = multer({
   }
 });
 
-// Multer storage for 25MB Image uploads (Screenshots & Thumbnails)
-const imageStorage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, imageUploadDir),
-  filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname).toLowerCase() || '.jpg';
-    const uniqueName = `img-${Date.now()}-${Math.round(Math.random() * 1E6)}${ext}`;
-    cb(null, uniqueName);
-  }
-});
+// Multer storage for 15MB Image uploads (Stored permanently in MongoDB Atlas)
+const StoredImage = mongoose.model('StoredImage', new S({
+  filename: txt(200),
+  contentType: { type: String, default: 'image/jpeg' },
+  data: { type: Buffer, required: true },
+  size: { type: Number, default: 0 }
+}, { timestamps: true }));
 
 const uploadImageMulter = multer({
-  storage: imageStorage,
-  limits: { fileSize: 25 * 1024 * 1024 }, // 25MB limit
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 15 * 1024 * 1024 }, // 15MB limit per image (MongoDB doc max is 16MB)
   fileFilter: (req, file, cb) => {
     if (file.mimetype.startsWith('image/') || /\.(jpg|jpeg|png|webp|gif|svg|avif)$/i.test(file.originalname)) {
       cb(null, true);
@@ -257,17 +255,31 @@ app.post('/api/admin/upload', upload.single('video'), wrap(async (req, res) => {
   });
 }));
 
-/* ---------- IMAGE UPLOAD (UP TO 25MB - SCREENSHOTS & THUMBNAILS) ---------- */
+/* ---------- IMAGE UPLOAD (STORED PERMANENTLY IN MONGODB ATLAS) ---------- */
 app.post('/api/admin/upload-image', uploadImageMulter.single('image'), wrap(async (req, res) => {
-  if (!req.file) return res.status(400).json({ error: 'Koi image file nahi mili' });
-  const imageUrl = `/uploads/images/${req.file.filename}`;
+  if (!req.file || !req.file.buffer) return res.status(400).json({ error: 'Koi image file nahi mili' });
+  const doc = await StoredImage.create({
+    filename: req.file.originalname || 'image.jpg',
+    contentType: req.file.mimetype || 'image/jpeg',
+    data: req.file.buffer,
+    size: req.file.size || req.file.buffer.length
+  });
   res.json({
     ok: true,
-    imageUrl,
-    filename: req.file.filename,
-    originalName: req.file.originalname,
-    size: req.file.size
+    imageUrl: `/api/images/${doc._id}`,
+    id: doc._id,
+    size: doc.size
   });
+}));
+
+/* ---------- SERVE PERMANENT IMAGES DIRECTLY FROM MONGODB ATLAS ---------- */
+app.get('/api/images/:id', wrap(async (req, res) => {
+  if (!mongoose.isValidObjectId(req.params.id)) return res.status(404).send('Image not found');
+  const img = await StoredImage.findById(req.params.id).lean();
+  if (!img || !img.data) return res.status(404).send('Image not found');
+  res.set('Content-Type', img.contentType || 'image/jpeg');
+  res.set('Cache-Control', 'public, max-age=31536000, immutable');
+  res.send(Buffer.isBuffer(img.data) ? img.data : Buffer.from(img.data.buffer || img.data));
 }));
 
 /* ---------- ADMIN ---------- */
