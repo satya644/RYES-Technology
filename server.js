@@ -95,8 +95,12 @@ const multer = require('multer');
 
 // Ensure upload directory exists
 const uploadDir = path.join(__dirname, 'uploads', 'videos');
+const imageUploadDir = path.join(__dirname, 'uploads', 'images');
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
+}
+if (!fs.existsSync(imageUploadDir)) {
+  fs.mkdirSync(imageUploadDir, { recursive: true });
 }
 
 // Multer storage for 1GB video upload
@@ -117,6 +121,28 @@ const upload = multer({
       cb(null, true);
     } else {
       cb(new Error('Kripya valid video file upload karein (MP4, WebM, MOV, etc.)'));
+    }
+  }
+});
+
+// Multer storage for 25MB Image uploads (Screenshots & Thumbnails)
+const imageStorage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, imageUploadDir),
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname).toLowerCase() || '.jpg';
+    const uniqueName = `img-${Date.now()}-${Math.round(Math.random() * 1E6)}${ext}`;
+    cb(null, uniqueName);
+  }
+});
+
+const uploadImageMulter = multer({
+  storage: imageStorage,
+  limits: { fileSize: 25 * 1024 * 1024 }, // 25MB limit
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype.startsWith('image/') || /\.(jpg|jpeg|png|webp|gif|svg|avif)$/i.test(file.originalname)) {
+      cb(null, true);
+    } else {
+      cb(new Error('Kripya valid image file upload karein (PNG, JPG, WEBP, etc.)'));
     }
   }
 });
@@ -225,6 +251,19 @@ app.post('/api/admin/upload', upload.single('video'), wrap(async (req, res) => {
   res.json({
     ok: true,
     mediaUrl,
+    filename: req.file.filename,
+    originalName: req.file.originalname,
+    size: req.file.size
+  });
+}));
+
+/* ---------- IMAGE UPLOAD (UP TO 25MB - SCREENSHOTS & THUMBNAILS) ---------- */
+app.post('/api/admin/upload-image', uploadImageMulter.single('image'), wrap(async (req, res) => {
+  if (!req.file) return res.status(400).json({ error: 'Koi image file nahi mili' });
+  const imageUrl = `/uploads/images/${req.file.filename}`;
+  res.json({
+    ok: true,
+    imageUrl,
     filename: req.file.filename,
     originalName: req.file.originalname,
     size: req.file.size

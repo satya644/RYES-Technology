@@ -9,9 +9,11 @@ yarn-error.log*
 .env.local
 .env.*.local
 
-# Uploaded Media (local uploaded videos)
+# Uploaded Media (local uploaded videos and images)
 uploads/videos/*
 !uploads/videos/.gitkeep
+uploads/images/*
+!uploads/images/.gitkeep
 
 # System & Editor Files
 .DS_Store

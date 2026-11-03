@@ -695,9 +695,14 @@ function openPortfolioForm(title, item, onSave) {
         <span class="mut" style="font-size:11.5px">Client ki live website ka link jise visitor click karke open kar sake.</span>
       </div>
       <div>
-        <label for="p_web_thumb" style="color:#fff">Website Screenshot / Preview Image URL (Optional)</label>
-        <input id="p_web_thumb" type="text" placeholder="https://.../screenshot.jpg" value="${isWebsite ? esc(item?.thumbUrl || "") : ""}">
-        <span class="mut" style="font-size:11.5px">Website screenshot URL. Agar khali chhodenge to modern website mockup automatic lag jayega.</span>
+        <label style="color:#fff; font-weight:600">📸 Website Screenshot / Photo Upload (PNG, JPG, WEBP)</label>
+        <input type="file" id="p_web_image_file" accept="image/png,image/jpeg,image/webp,image/*">
+        <div id="p_web_preview_wrap" style="margin-top:8px; ${item?.thumbUrl ? '' : 'display:none'}">
+          <div class="mut" style="font-size:11.5px; margin-bottom:4px">Screenshot Preview:</div>
+          <img id="p_web_preview_img" src="${item?.thumbUrl ? esc(resolveMedia(item.thumbUrl)) : ''}" style="max-height:120px; max-width:240px; border-radius:6px; object-fit:cover; border:1px solid #1f293d; display:block">
+        </div>
+        <input id="p_web_thumb" type="hidden" value="${esc(item?.thumbUrl || "")}">
+        <span class="mut" style="font-size:11.5px">Direct computer ya phone gallery se screenshot select karein. URL daalne ki koi zaroorat nahi hai.</span>
       </div>
     </div>
 
@@ -746,8 +751,13 @@ function openPortfolioForm(title, item, onSave) {
       </div>
 
       <div>
-        <label for="p_vid_thumb">Custom Video Thumbnail URL (Optional)</label>
-        <input id="p_vid_thumb" type="text" placeholder="https://.../thumb.jpg" value="${!isWebsite ? esc(item?.thumbUrl || "") : ""}">
+        <label style="color:#fff; font-weight:600">🖼️ Video Thumbnail Image Upload (Optional)</label>
+        <input type="file" id="p_vid_image_file" accept="image/png,image/jpeg,image/webp,image/*">
+        <div id="p_vid_preview_wrap" style="margin-top:8px; ${item?.thumbUrl ? '' : 'display:none'}">
+          <div class="mut" style="font-size:11.5px; margin-bottom:4px">Thumbnail Preview:</div>
+          <img id="p_vid_preview_img" src="${item?.thumbUrl ? esc(resolveMedia(item.thumbUrl)) : ''}" style="max-height:120px; max-width:240px; border-radius:6px; object-fit:cover; border:1px solid #1f293d; display:block">
+        </div>
+        <input id="p_vid_thumb" type="hidden" value="${esc(item?.thumbUrl || "")}">
       </div>
     </div>
   `;
@@ -766,6 +776,29 @@ function openPortfolioForm(title, item, onSave) {
   $$('input[name="p_work_type"]').forEach(radio => {
     radio.addEventListener("change", e => updateTypeView(e.target.value));
   });
+
+  // Image instant previews
+  const webImgInput = $("#p_web_image_file");
+  if (webImgInput) {
+    webImgInput.addEventListener("change", e => {
+      const f = e.target.files && e.target.files[0];
+      if (f) {
+        $("#p_web_preview_img").src = URL.createObjectURL(f);
+        $("#p_web_preview_wrap").style.display = "block";
+      }
+    });
+  }
+
+  const vidImgInput = $("#p_vid_image_file");
+  if (vidImgInput) {
+    vidImgInput.addEventListener("change", e => {
+      const f = e.target.files && e.target.files[0];
+      if (f) {
+        $("#p_vid_preview_img").src = URL.createObjectURL(f);
+        $("#p_vid_preview_wrap").style.display = "block";
+      }
+    });
+  }
 
   const form = $("#f");
   const saveBtn = form.querySelector("button.cta");
@@ -798,11 +831,48 @@ function openPortfolioForm(title, item, onSave) {
       }
       mediaUrl = webUrl;
       thumbUrl = $("#p_web_thumb").value.trim();
+
+      // Check if user uploaded a screenshot image file
+      const webImgFile = $("#p_web_image_file")?.files && $("#p_web_image_file").files[0];
+      if (webImgFile) {
+        if (webImgFile.size > 25 * 1024 * 1024) {
+          return toast("Screenshot image 25MB se zyada badi hai", "error");
+        }
+        saveBtn.disabled = true;
+        saveBtn.textContent = "Uploading screenshot...";
+        try {
+          const imgRes = await A.uploadImage(webImgFile);
+          thumbUrl = imgRes.imageUrl;
+        } catch (imgErr) {
+          saveBtn.disabled = false;
+          saveBtn.textContent = origSaveText;
+          return toast("Screenshot upload fail: " + imgErr.message, "error");
+        }
+      }
+
       category = "website";
     } else {
       category = $("#p_video_cat").value || "video";
       thumbUrl = $("#p_vid_thumb").value.trim();
       mediaUrl = $("#p_vid_url").value.trim();
+
+      // Check if user uploaded a thumbnail image file
+      const vidImgFile = $("#p_vid_image_file")?.files && $("#p_vid_image_file").files[0];
+      if (vidImgFile) {
+        if (vidImgFile.size > 25 * 1024 * 1024) {
+          return toast("Thumbnail image 25MB se zyada badi hai", "error");
+        }
+        saveBtn.disabled = true;
+        saveBtn.textContent = "Uploading thumbnail...";
+        try {
+          const imgRes = await A.uploadImage(vidImgFile);
+          thumbUrl = imgRes.imageUrl;
+        } catch (imgErr) {
+          saveBtn.disabled = false;
+          saveBtn.textContent = origSaveText;
+          return toast("Thumbnail upload fail: " + imgErr.message, "error");
+        }
+      }
 
       const fileInput = $("#p_video_file");
       const file = fileInput && fileInput.files && fileInput.files[0];

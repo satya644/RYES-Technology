@@ -325,14 +325,22 @@ function renderPortfolioCards(items, selectedCategory) {
     const ytId = extractYouTubeId(mediaUrl);
     const isVideoFile = mediaUrl.startsWith("/uploads/") || /\.(mp4|webm|mov|mkv|m4v)$/i.test(mediaUrl);
 
-    // Resolve full video URL if relative (works on localhost, LAN IP, GitHub Pages, and Render)
-    const fullMediaUrl = mediaUrl.startsWith("http")
-      ? mediaUrl
-      : (window.location.hostname === "localhost" || /^\d+\.\d+\.\d+\.\d+$/.test(window.location.hostname)
-          ? `${window.location.protocol}//${window.location.hostname}:5000${mediaUrl}`
-          : (window.location.hostname.endsWith("github.io")
-              ? `https://ryes-technology.onrender.com${mediaUrl}`
-              : `${window.location.origin}${mediaUrl}`));
+    // Resolve full asset URL if relative (works on localhost, LAN IP, GitHub Pages, and Render)
+    const resolveAssetUrl = url => {
+      if (!url) return "";
+      if (url.startsWith("http://") || url.startsWith("https://")) return url;
+      const cleanPath = url.startsWith("/") ? url : "/" + url;
+      if (window.location.hostname === "localhost" || /^\d+\.\d+\.\d+\.\d+$/.test(window.location.hostname)) {
+        return `${window.location.protocol}//${window.location.hostname}:5000${cleanPath}`;
+      }
+      if (window.location.hostname.endsWith("github.io")) {
+        return `https://ryes-technology.onrender.com${cleanPath}`;
+      }
+      return `${window.location.origin}${cleanPath}`;
+    };
+
+    const fullMediaUrl = resolveAssetUrl(mediaUrl);
+    const fullThumbUrl = item.thumbUrl ? resolveAssetUrl(item.thumbUrl) : "";
 
     const itemTitle = isHi
       ? (item.title_hi || item.title_en || "Project Preview")
@@ -363,7 +371,7 @@ function renderPortfolioCards(items, selectedCategory) {
       const thumbImg = document.createElement("img");
       thumbImg.loading = "lazy";
       thumbImg.alt = itemTitle;
-      thumbImg.src = item.thumbUrl || "https://images.unsplash.com/photo-1547658719-da2b51169166?auto=format&fit=crop&w=800&q=80";
+      thumbImg.src = fullThumbUrl || "https://images.unsplash.com/photo-1547658719-da2b51169166?auto=format&fit=crop&w=800&q=80";
       mediaBox.appendChild(thumbImg);
 
       if (mediaUrl) {
@@ -377,7 +385,7 @@ function renderPortfolioCards(items, selectedCategory) {
       videoEl.controls = true;
       videoEl.playsInline = true;
       videoEl.preload = "metadata";
-      if (item.thumbUrl) videoEl.poster = item.thumbUrl;
+      if (fullThumbUrl) videoEl.poster = fullThumbUrl;
       videoEl.src = fullMediaUrl;
       mediaBox.appendChild(videoEl);
     }
@@ -386,7 +394,7 @@ function renderPortfolioCards(items, selectedCategory) {
       const thumbImg = document.createElement("img");
       thumbImg.loading = "lazy";
       thumbImg.alt = itemTitle;
-      thumbImg.src = item.thumbUrl || `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`;
+      thumbImg.src = fullThumbUrl || `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`;
       mediaBox.appendChild(thumbImg);
 
       const playOverlay = document.createElement("div");

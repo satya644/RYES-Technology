@@ -116,5 +116,42 @@ export function uploadVideo(file, onProgress) {
   });
 }
 
+// Image Upload Helper (Up to 25MB for Screenshots & Thumbnails)
+export function uploadImage(file, onProgress) {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    const formData = new FormData();
+    formData.append("image", file);
+
+    if (xhr.upload && onProgress) {
+      xhr.upload.onprogress = e => {
+        if (e.lengthComputable) {
+          const percent = Math.round((e.loaded / e.total) * 100);
+          onProgress(percent, e.loaded, e.total);
+        }
+      };
+    }
+
+    xhr.onload = () => {
+      try {
+        const data = JSON.parse(xhr.responseText);
+        if (xhr.status >= 200 && xhr.status < 300) {
+          resolve(data);
+        } else {
+          reject(new Error(data.error || "Image upload failed"));
+        }
+      } catch {
+        reject(new Error("Invalid response from server"));
+      }
+    };
+
+    xhr.onerror = () => reject(new Error("Network connection error during image upload"));
+    xhr.open("POST", API_BASE + "/admin/upload-image");
+    const token = getToken();
+    if (token) xhr.setRequestHeader("Authorization", "Bearer " + token);
+    xhr.send(formData);
+  });
+}
+
 export const saveSettings = data => req("/admin/settings", { method: "PUT", body: data, auth: true });
 export const seedDefaults = () => req("/admin/seed", { method: "POST", auth: true });
