@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>RYES Admin</title>
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+  <!-- Login Form -->
+  <form id="login">
+    <h1>RYES Admin</h1>
+    <p>Apna email aur password daalkar login karein</p>
+    <div>
+      <label for="em">Admin Email</label>
+      <input id="em" type="email" placeholder="admin@ryes.in" value="admin@ryes.in" autocomplete="username" required>
+    </div>
+    <div>
+      <label for="pw">Password</label>
+      <input id="pw" type="password" placeholder="••••••••" autocomplete="current-password" required>
+    </div>
+    <button class="cta" id="loginBtn" type="submit">Login</button>
+  </form>
+
+  <!-- App Shell -->
+  <div id="app" hidden>
+    <header>
+      <div class="brand"><span>RYES</span> Admin</div>
+      <nav id="nav"></nav>
+      <div class="user-meta">
+        <a href="../index.html" target="_blank" rel="noopener">🌐 View Site</a>
+        <span id="userEmail"></span>
+        <button class="sec" id="out">Logout</button>
+      </div>
+    </header>
+
+    <main id="main"></main>
+  </div>
+
+  <!-- Modal Dialog -->
+  <dialog id="dlg">
+    <form id="f">
+      <h2 id="dt"></h2>
+      <div class="grid" id="fields"></div>
+      <div class="row" style="margin-top:16px;border-top:1px solid var(--line);padding-top:12px">
+        <button type="button" class="sec" id="cancel">Cancel</button>
+        <button class="cta" type="submit">Save</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Toast Container -->
+  <div id="toast"></div>
+
+  <!-- Admin Controller -->
+  <script type="module" src="admin.js"></script>
+</body>
+</html>

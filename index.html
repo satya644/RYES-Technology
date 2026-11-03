@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RYES Technology — Digital Growth Agency for Coaching & Local Businesses</title>
+  <meta name="description" content="RYES Technology (founded by Satyam Maurya) is an Indian digital growth agency helping coaching institutes and local businesses scale with high-retention video editing, custom websites, and local SEO.">
+  <meta name="keywords" content="RYES Technology, Satyam Maurya, video editing for coaching, reels editing for teachers, local SEO, website development India, growth agency">
+  <meta name="author" content="Satyam Maurya">
+  <meta name="theme-color" content="#0B0F1A">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="http://localhost:5000/">
+  <meta property="og:title" content="RYES Technology — Digital Growth Agency">
+  <meta property="og:description" content="Turn your coaching & business into a growth machine. High-retention video editing, social media management, custom websites, and local SEO.">
+  <meta property="og:site_name" content="RYES Technology">
+  <meta property="og:locale" content="en_IN">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="RYES Technology — Digital Growth Agency">
+  <meta name="twitter:description" content="Turn your coaching & business into a growth machine. High-retention video editing, custom websites, and local SEO.">
+
+  <!-- Fonts: Poppins (Headings) & Inter (Body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    "name": "RYES Technology",
+    "founder": {
+      "@type": "Person",
+      "name": "Satyam Maurya"
+    },
+    "description": "Digital growth agency helping coaching institutes, educators, and local businesses scale with high-retention video editing, custom websites, and local SEO.",
+    "areaServed": "IN",
+    "priceRange": "₹₹",
+    "address": {
+      "@type": "PostalAddress",
+      "addressCountry": "IN"
+    }
+  }
+  </script>
+</head>
+<body>
+
+  <!-- ==========================================================================
+       Sticky Header / Navbar
+       ========================================================================== -->
+  <header class="site-header">
+    <div class="container nav-container">
+      <a href="#" class="brand-logo" aria-label="RYES Technology Home">
+        RYES <span class="highlight">Technology</span>
+      </a>
+
+      <!-- Desktop Navigation Menu -->
+      <nav aria-label="Primary Navigation">
+        <ul class="nav-menu" id="navMenu">
+          <li><a href="#verticals" data-i18n="navServices">Services</a></li>
+          <li><a href="#how-it-works" data-i18n="navHowItWorks">Process</a></li>
+          <li><a href="#pricing" data-i18n="navPricing">Pricing</a></li>
+          <li><a href="#portfolio" data-i18n="navPortfolio">Portfolio</a></li>
+          <li><a href="#testimonials" data-i18n="navTestimonials">Reviews</a></li>
+          <li><a href="#faq" data-i18n="navFaq">FAQ</a></li>
+          <li><a href="admin/index.html" style="color:var(--orange);font-weight:600" title="Admin Dashboard">Admin ↗</a></li>
+        </ul>
+      </nav>
+
+      <!-- Right Action Items -->
+      <div class="nav-right">
+        <!-- Language Switcher: EN | Hinglish -->
+        <button id="langSwitch" class="lang-switch" aria-label="Toggle language between English and Hinglish">
+          🌐 <span id="langSwitchText">EN / English</span>
+        </button>
+
+        <a href="#audit" class="btn btn-orange" style="padding:8px 18px;font-size:13.5px" data-i18n="navAudit">
+          Free Audit
+        </a>
+
+        <!-- Mobile Menu Toggle Button -->
+        <button id="mobileNavToggle" class="mobile-nav-toggle" aria-label="Open mobile navigation">
+          ☰
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==========================================================================
+       1. Hero Section
+       ========================================================================== -->
+  <section class="hero-section" id="hero">
+    <div class="hero-glow-bg"></div>
+    <div class="container hero-inner">
+      <div class="hero-badge-pill" data-i18n="heroBadge">
+        🚀 Pan-India Digital Growth Agency
+      </div>
+      
+      <!-- Headline & Subheadline dynamically populated via API settings with i18n fallback -->
+      <h1 class="hero-title" id="heroTitle">
+        Hum aapki coaching aur business ko online growth machine banate hain
+      </h1>
+      <p class="hero-sub" id="heroSub">
+        Video editing, social media management, custom websites aur local SEO, sab ek hi chhat ke neeche.
+      </p>
+
+      <div class="hero-ctas">
+        <a href="#audit" class="btn btn-orange" data-i18n="heroAuditBtn">
+          Free Growth Audit Lein
+        </a>
+        <a href="#" id="heroWhatsappBtn" class="btn btn-outline wa-dynamic-link" target="_blank" rel="noopener" data-i18n="heroWhatsappBtn">
+          💬 WhatsApp Par Baat Karein
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       2. Two Verticals Section (Education / Local Business)
+       ========================================================================== -->
+  <section id="verticals">
+    <div class="container">
+      <div class="sec-head">
+        <span class="sec-badge orange" data-i18n="verticalsBadge">Core Specializations</span>
+        <h2 data-i18n="verticalsTitle">Do Core Verticals Jisme Hum Result Deliver Karte Hain</h2>
+        <p data-i18n="verticalsSub">
+          Chahe aap online educator ho ya local business owner, hamare systems predictable leads aur brand authority banate hain.
+        </p>
+      </div>
+
+      <div class="verticals-grid">
+        <!-- Vertical A: Education -->
+        <div class="vertical-card featured">
+          <span class="vertical-tag" data-i18n="eduTag">Education Retainer</span>
+          <h3 data-i18n="eduTitle">Coaching Institutes & Teachers</h3>
+          <p class="vertical-desc" data-i18n="eduSub">
+            Lectures ko high-converting video content aur student admissions me badlein.
+          </p>
+
+          <ul class="bullet-list">
+            <li>
+              <span class="bullet-icon">✓</span>
+              <span data-i18n="eduP1">Raw lectures se viral, high-retention Reels & Shorts cutting</span>
+            </li>
+            <li>
+              <span class="bullet-icon">✓</span>
+              <span data-i18n="eduP2">Hinglish motion subtitles & sound design (dead-space elimination)</span>
+            </li>
+            <li>
+              <span class="bullet-icon">✓</span>
+              <span data-i18n="eduP3">Formula overlays, whiteboard enhancement & diagram animations</span>
+            </li>
+            <li>
+              <span class="bullet-icon">✓</span>
+              <span data-i18n="eduP4">Batch launches & webinar registration ke liye promo videos</span>
+            </li>
+            <li>
+              <span class="bullet-icon">✓</span>
+              <span data-i18n="eduP5">Custom website / portal with direct WhatsApp lead capture</span>
+            </li>
+          </ul>
+
+          <a href="#pricing" class="btn btn-orange" data-i18n="eduBtn">
+            Education Pricing Dekhein
+          </a>
+        </div>
+
+        <!-- Vertical B: Local Business -->
+        <div class="vertical-card">
+          <span class="vertical-tag" data-i18n="localTag">₹5,000/Mo Growth Plan</span>
+          <h3 data-i18n="localTitle">Local Businesses & Clinics</h3>
+          <p class="vertical-desc" data-i18n="localSub">
+            Google Maps par #1 rank karein aur offline walk-in footfall 3X badhayein.
+          </p>
+
+          <ul class="bullet-list">
+            <li>
+              <span class="bullet-icon">✓</span>
+              <span data-i18n="localP1">Google Business Profile setup, weekly geo-posts & Local SEO #1 ranking</span>
+            </li>
+            <li>
+              <span class="bullet-icon">✓</span>
+              <span data-i18n="localP2">WhatsApp product/service catalog integrated custom website</span>
+            </li>
+            <li>
+              <span class="bullet-icon">✓</span>
+              <span data-i18n="localP3">10 localized UGC-style reels & 12 monthly social media creatives</span>
+            </li>
+            <li>
+              <span class="bullet-icon">✓</span>
+              <span data-i18n="localP4">Local micro-influencer tie-ups & hyper-local targeted promotion</span>
+            </li>
+            <li>
+              <span class="bullet-icon">✓</span>
+              <span data-i18n="localP5">5-Star review management system jo market me solid trust banaye</span>
+            </li>
+          </ul>
+
+          <a href="#pricing" class="btn btn-outline" data-i18n="localBtn">
+            Local Business Pricing Dekhein
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       3. How It Works (3 Steps)
+       ========================================================================== -->
+  <section id="how-it-works" style="background:#070B14;border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+    <div class="container">
+      <div class="sec-head">
+        <span class="sec-badge" data-i18n="hiwBadge">Simple 3-Step Process</span>
+        <h2 data-i18n="hiwTitle">Kaise Kaam Karta Hai RYES Growth Engine?</h2>
+      </div>
+
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-num" data-i18n="hiwStep1Num">01</div>
+          <h3 data-i18n="hiwStep1Title">Free Growth Audit</h3>
+          <p data-i18n="hiwStep1Desc">
+            Aapke existing videos, social profiles, website aur local competitors ka in-depth analysis karke growth gaps nikalte hain.
+          </p>
+        </div>
+
+        <div class="step-card">
+          <div class="step-num" data-i18n="hiwStep2Num">02</div>
+          <h3 data-i18n="hiwStep2Title">7-Day Paid Pilot</h3>
+          <p data-i18n="hiwStep2Desc">
+            Bina kisi lambe contract ke pehle sample deliverables test karein. Hamari editing quality aur 24-48h turnaround time dekhein.
+          </p>
+        </div>
+
+        <div class="step-card">
+          <div class="step-num" data-i18n="hiwStep3Num">03</div>
+          <h3 data-i18n="hiwStep3Title">Monthly Retainer</h3>
+          <p data-i18n="hiwStep3Desc">
+            Pilot pasand aane par monthly retainer shuru hota hai. Regular admissions aur client footfall autopilot system par scale hote hain.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       4. Pricing Section (Loaded via API)
+       ========================================================================== -->
+  <section id="pricing">
+    <div class="container">
+      <div class="sec-head">
+        <span class="sec-badge orange" data-i18n="pricingBadge">Transparent Investment</span>
+        <h2 data-i18n="pricingTitle">Seedha Aur Saaf Pricing System</h2>
+        <p data-i18n="pricingSub">
+          Koi hidden charges nahi. Jo plan aapke business ke stage ko suit kare, use chun kar WhatsApp par shuru karein.
+        </p>
+      </div>
+
+      <!-- Pricing Category Tabs -->
+      <div class="pricing-filter-tabs">
+        <button class="pricing-tab active" data-filter="all" data-i18n="tabAll">Sabhi Plans</button>
+        <button class="pricing-tab" data-filter="education" data-i18n="tabEdu">Education / Coaching</button>
+        <button class="pricing-tab" data-filter="local" data-i18n="tabLocal">Local Business</button>
+        <button class="pricing-tab" data-filter="bundle" data-i18n="tabBundle">Complete Bundles</button>
+      </div>
+
+      <!-- Pricing Cards Container (Rendered Safely via DOM API) -->
+      <div id="pricingGrid" class="pricing-cards-grid">
+        <div class="skeleton-loader">
+          <div class="skeleton-card"></div>
+          <div class="skeleton-card"></div>
+          <div class="skeleton-card"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       5. Portfolio Section (Loaded via API & YouTube Lightbox)
+       ========================================================================== -->
+  <section id="portfolio" style="background:#070B14;border-top:1px solid var(--line)">
+    <div class="container">
+      <div class="sec-head">
+        <span class="sec-badge" data-i18n="portBadge">Our Proof of Work</span>
+        <h2 data-i18n="portTitle">Recent Projects & High-Retention Content</h2>
+        <p data-i18n="portSub">
+          Dekhiye humne educators aur brands ke liye kis tarah ki visual quality aur engagement deliver kiya hai.
+        </p>
+      </div>
+
+      <!-- Category Filter Tabs -->
+      <div id="portfolioTabs" class="portfolio-filter-tabs">
+        <button class="port-tab active" data-category="all" data-i18n="portAll">All Work</button>
+      </div>
+
+      <!-- Portfolio Grid Container -->
+      <div id="portfolioGrid" class="portfolio-grid">
+        <div class="skeleton-loader">
+          <div class="skeleton-card"></div>
+          <div class="skeleton-card"></div>
+          <div class="skeleton-card"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       6. Testimonials Section (Loaded via API)
+       ========================================================================== -->
+  <section id="testimonials">
+    <div class="container">
+      <div class="sec-head">
+        <span class="sec-badge orange" data-i18n="testBadge">Client Feedback</span>
+        <h2 data-i18n="testTitle">Clients Hamare Kaam Ke Baare Me Kya Kehte Hain</h2>
+        <div style="margin-top:16px">
+          <button id="openReviewModalBtn" class="btn btn-outline" type="button" style="padding:8px 18px;font-size:13.5px" data-i18n="writeReviewBtn">
+            ⭐ Rating / Review Submit Karein
+          </button>
+        </div>
+      </div>
+
+      <div id="testimonialsGrid" class="testimonials-grid">
+        <div class="skeleton-loader">
+          <div class="skeleton-card"></div>
+          <div class="skeleton-card"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       7. FAQ Section (Accordion)
+       ========================================================================== -->
+  <section id="faq" style="background:#070B14;border-top:1px solid var(--line)">
+    <div class="container">
+      <div class="sec-head">
+        <span class="sec-badge" data-i18n="faqBadge">Clear Answers</span>
+        <h2 data-i18n="faqTitle">Frequently Asked Questions</h2>
+      </div>
+
+      <div class="faq-list">
+        <!-- Item 1 -->
+        <div class="faq-item">
+          <button class="faq-question-btn" type="button">
+            <span data-i18n="faqQ1">Kya kisi contract ya lock-in period me fasna padega?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p data-i18n="faqA1">
+              Bilkul nahi! Hamare sabhi plans month-to-month retainer par chalte hain. Aap kisi bhi mahine pause ya stop kar sakte hain. Koi advance bond ya penalty nahi hai.
+            </p>
+          </div>
+        </div>
+
+        <!-- Item 2 -->
+        <div class="faq-item">
+          <button class="faq-question-btn" type="button">
+            <span data-i18n="faqQ2">Video shooting kaun karega — aapki team ya hum?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p data-i18n="faqA2">
+              Teachers aur educators apne lectures ya phone se raw clips hume Google Drive/Telegram par bhejte hain. Hamari post-production team usme se best hooks, sound design, aur graphics add karti hai. Local businesses ke liye hum exact scripts aur recording angles provide karte hain.
+            </p>
+          </div>
+        </div>
+
+        <!-- Item 3 -->
+        <div class="faq-item">
+          <button class="faq-question-btn" type="button">
+            <span data-i18n="faqQ3">Revisions aur delivery turnaround time kya rehta hai?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p data-i18n="faqA3">
+              Short-form videos (Reels/Shorts) ka turnaround time 24 se 48 hours rehta hai. Hum minor revisions tab tak karte hain jab tak aap final output se puri tarah satisfied na ho jayein.
+            </p>
+          </div>
+        </div>
+
+        <!-- Item 4 -->
+        <div class="faq-item">
+          <button class="faq-question-btn" type="button">
+            <span data-i18n="faqQ4">Advance payment aur billing ka kya process hota hai?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p data-i18n="faqA4">
+              Monthly plans ke liye month ke start me simple invoice raise hota hai. New clients ke liye hum pehle 7-day test pilot dete hain taaki aap bina risk quality test kar sakein.
+            </p>
+          </div>
+        </div>
+
+        <!-- Item 5 -->
+        <div class="faq-item">
+          <button class="faq-question-btn" type="button">
+            <span data-i18n="faqQ5">Google Business Profile aur Local SEO se footfall aane me kitna time lagta hai?</span>
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <p data-i18n="faqA5">
+              Google Maps aur local search optimization ka impact aam taur par 3 se 6 weeks me visible ho jata hai jaise hi citations aur reviews optimize hoti hain.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       8. Contact / Free Audit Section & Form
+       ========================================================================== -->
+  <section id="audit">
+    <div class="container audit-section-wrap">
+      <!-- Left Info Panel -->
+      <div class="audit-info-panel">
+        <span class="sec-badge orange" data-i18n="auditBadge">Zero Risk Consultation</span>
+        <h3 data-i18n="auditTitle">Free Growth Audit & Strategy Call Book Karein</h3>
+        <p data-i18n="auditSub">
+          Apni basic details neeche share karein. Founder Satyam Maurya aur team 2 ghante ke andar aapse connect karke personalized roadmap share karegi.
+        </p>
+
+        <div class="direct-channels-list">
+          <a href="#" id="directWaLink" class="direct-channel-card wa-dynamic-link" target="_blank" rel="noopener">
+            <div class="channel-icon-circle">💬</div>
+            <div class="channel-details">
+              <b>WhatsApp Support</b>
+              <span id="footerWhatsappText">Instant response via WhatsApp</span>
+            </div>
+          </a>
+
+          <a href="#" id="directEmailLink" class="direct-channel-card">
+            <div class="channel-icon-circle">✉️</div>
+            <div class="channel-details">
+              <b>Official Email</b>
+              <span id="footerEmailText">contact@ryes.in</span>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <!-- Right Form Card -->
+      <div class="lead-form-card">
+        <!-- Error State Alert -->
+        <div id="formErrorAlert" class="form-status-alert error-alert" role="alert"></div>
+
+        <!-- Form Success State Box (Hidden by default) -->
+        <div id="formSuccessBox" class="form-success-box">
+          <h4 data-i18n="formSuccessHeading">✅ Shukriya! Request Successfully Submit Ho Gayi</h4>
+          <p data-i18n="formSuccessDesc">
+            Hamari team aapki requirement review kar rahi hai aur 2 ghante ke andar aapse WhatsApp/Call par connect karegi.
+          </p>
+          <a href="#" id="successWaBtn" class="btn btn-wa-action wa-dynamic-link" target="_blank" rel="noopener" data-i18n="formDirectWaBtn">
+            💬 Direct WhatsApp Par Chat Karein
+          </a>
+        </div>
+
+        <!-- The Actual Form -->
+        <form id="leadForm" novalidate>
+          <!-- Anti-spam Honeypot field (hidden from real users, must stay empty) -->
+          <input type="text" id="websiteHoneypot" name="website" class="honeypot-input" tabindex="-1" autocomplete="off">
+
+          <div class="form-group">
+            <label for="leadName" data-i18n="formNameLabel">Aapka Pura Naam *</label>
+            <input type="text" id="leadName" name="name" required minlength="2" placeholder="e.g. Rahul Sharma" autocomplete="name">
+          </div>
+
+          <div class="form-group">
+            <label for="leadPhone" data-i18n="formPhoneLabel">Phone / WhatsApp Number *</label>
+            <input type="tel" id="leadPhone" name="phone" required placeholder="10-15 digit mobile number" autocomplete="tel">
+          </div>
+
+          <div class="form-group">
+            <label for="leadBusiness" data-i18n="formBusinessLabel">Coaching / Business Ka Naam</label>
+            <input type="text" id="leadBusiness" name="businessType" placeholder="e.g. Apex Physics Classes / City Clinic">
+          </div>
+
+          <div class="form-group">
+            <label for="leadVertical" data-i18n="formVerticalLabel">Business Category Chunein</label>
+            <select id="leadVertical" name="vertical">
+              <option value="education" data-i18n="formOptEdu">Education (Coaching Institute / Teacher)</option>
+              <option value="local" data-i18n="formOptLocal">Local Business (Clinic, Store, Gym, Retail)</option>
+              <option value="other" data-i18n="formOptOther">Other / Creator / Startup</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="leadMessage" data-i18n="formMessageLabel">Aapki Current Requirement / Growth Goal</label>
+            <textarea id="leadMessage" name="message" rows="3" placeholder="Aapko kin services ki zaroorat hai?"></textarea>
+          </div>
+
+          <button type="submit" id="submitLeadBtn" class="btn btn-orange" style="width:100%" data-i18n="formSubmitBtn">
+            Free Growth Audit Request Bhejo
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       9. Footer
+       ========================================================================== -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-col">
+          <div class="brand-logo" style="margin-bottom:12px">
+            RYES <span class="highlight">Technology</span>
+          </div>
+          <p data-i18n="footerDesc">
+            RYES Technology ek premium digital growth agency hai jo Indian educators aur local businesses ko online authority banane me help karti hai.
+          </p>
+          <div class="footer-founder-tag" data-i18n="footerFounder">
+            Founder: Satyam Maurya
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h5 data-i18n="footerQuickLinks">Quick Navigation</h5>
+          <ul class="footer-links">
+            <li><a href="#verticals" data-i18n="navServices">Services</a></li>
+            <li><a href="#how-it-works" data-i18n="navHowItWorks">Process</a></li>
+            <li><a href="#pricing" data-i18n="navPricing">Pricing</a></li>
+            <li><a href="#portfolio" data-i18n="navPortfolio">Portfolio</a></li>
+            <li><a href="#testimonials" data-i18n="navTestimonials">Reviews</a></li>
+            <li><a href="#faq" data-i18n="navFaq">FAQ</a></li>
+            <li><a href="admin/index.html">Admin Dashboard</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5 data-i18n="footerContactTitle">Direct Contact</h5>
+          <div class="social-links" style="margin-bottom:16px">
+            <a href="#" id="footerInstagramLink" class="social-link-btn" target="_blank" rel="noopener" hidden>
+              📷 Instagram
+            </a>
+            <a href="#" id="footerYoutubeLink" class="social-link-btn" target="_blank" rel="noopener" hidden>
+              ▶ YouTube
+            </a>
+          </div>
+          <p style="font-size:13px;color:var(--muted)">
+            Target Market: Pan-India (Online Delivery & 24/7 Digital Operations)
+          </p>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span data-i18n="footerRights">© 2026 RYES Technology. All rights reserved.</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==========================================================================
+       Review / Rating Submission Modal
+       ========================================================================== -->
+  <div id="reviewModal" class="lightbox-modal" role="dialog" aria-modal="true" aria-label="Submit Review">
+    <div class="lead-form-card" style="max-width:520px;width:100%;position:relative;margin:20px">
+      <button id="closeReviewModalBtn" class="lightbox-close-btn" style="top:12px;right:16px;font-size:24px" aria-label="Close">&times;</button>
+      
+      <h3 style="font-size:20px;margin-bottom:6px" data-i18n="revModalTitle">Apna Review & Rating Share Karein</h3>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:18px" data-i18n="revModalSub">
+        Aapka feedback zaroori hai. Admin dwara verify hone ke baad yeh website par show hoga.
+      </p>
+
+      <div id="reviewStatusAlert" class="form-status-alert error-alert" style="display:none"></div>
+
+      <div id="reviewSuccessBox" class="form-success-box">
+        <h4 data-i18n="revSuccessMsg">✅ Shukriya! Aapka review submit ho gaya hai. Admin approval ke baad website par show hoga.</h4>
+      </div>
+
+      <form id="publicReviewForm" novalidate>
+        <input type="text" id="revHoneypot" name="website" class="honeypot-input" tabindex="-1" autocomplete="off">
+
+        <!-- Star Rating Interactive Selector -->
+        <div class="form-group">
+          <label data-i18n="revRatingLabel">Rating (1 se 5 Stars) *</label>
+          <div id="starRatingSelect" style="display:flex;gap:8px;font-size:28px;cursor:pointer;color:#FBBF24;margin-top:4px" aria-label="Select Rating">
+            <span class="star-item" data-val="1">★</span>
+            <span class="star-item" data-val="2">★</span>
+            <span class="star-item" data-val="3">★</span>
+            <span class="star-item" data-val="4">★</span>
+            <span class="star-item" data-val="5">★</span>
+          </div>
+          <input type="hidden" id="selectedStarRating" value="5">
+        </div>
+
+        <div class="form-group">
+          <label for="revName" data-i18n="revNameLabel">Aapka Pura Naam *</label>
+          <input type="text" id="revName" required minlength="2" placeholder="e.g. Anand Kumar">
+        </div>
+
+        <div class="form-group">
+          <label for="revRole" data-i18n="revRoleLabel">Coaching / Business Ka Naam (Designation)</label>
+          <input type="text" id="revRole" placeholder="e.g. Founder, Target Coaching / Clinic">
+        </div>
+
+        <div class="form-group">
+          <label for="revText" data-i18n="revTextLabel">Aapka Honest Feedback / Review *</label>
+          <textarea id="revText" rows="3" required placeholder="Humari services se aapko kaisa experience aur growth mili?"></textarea>
+        </div>
+
+        <button type="submit" id="submitReviewBtn" class="btn btn-orange" style="width:100%" data-i18n="revSubmitBtn">
+          Review Submit Karein
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       Lightbox Modal for YouTube Videos
+       ========================================================================== -->
+  <div id="videoLightbox" class="lightbox-modal" role="dialog" aria-modal="true" aria-label="Video Player">
+    <div class="lightbox-content">
+      <button id="closeLightboxBtn" class="lightbox-close-btn" aria-label="Close Video">&times;</button>
+      <iframe id="lightboxIframe" src="" title="Video Player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       Floating WhatsApp CTA Button
+       ========================================================================== -->
+  <a href="#" class="floating-wa-btn wa-dynamic-link" target="_blank" rel="noopener" title="Chat on WhatsApp" aria-label="Contact RYES on WhatsApp">
+    💬
+  </a>
+
+  <!-- ==========================================================================
+       Application Script (ES Module)
+       ========================================================================== -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
