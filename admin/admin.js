@@ -650,72 +650,122 @@ function openPortfolioForm(title, item, onSave) {
 
   const currentMedia = item?.mediaUrl || "";
   const isVideoFile = currentMedia.startsWith("/uploads/") || /\.(mp4|webm|mov|mkv)$/i.test(currentMedia);
+  const isWebsite = (item?.category || "").toLowerCase() === "website";
 
   $("#fields").innerHTML = `
+    <!-- Work Type Switcher -->
+    <div style="grid-column: 1 / -1; background:#0B0F1A; padding:12px 14px; border-radius:10px; border:1px solid #1F293D">
+      <label style="font-weight:700; font-size:13.5px; color:#fff; display:block; margin-bottom:8px">
+        Kaam Ka Type (Work Category) *
+      </label>
+      <div style="display:flex; gap:12px; flex-wrap:wrap">
+        <label id="typeLabelWebsite" style="display:inline-flex; align-items:center; gap:8px; cursor:pointer; background:${isWebsite ? 'rgba(59,130,246,0.2)' : '#121829'}; padding:9px 16px; border-radius:8px; border:1px solid ${isWebsite ? 'var(--blue)' : '#1E2842'}; color:#fff; font-weight:600">
+          <input type="radio" name="p_work_type" value="website" ${isWebsite ? "checked" : ""}> 🌐 Client Website Work
+        </label>
+        <label id="typeLabelVideo" style="display:inline-flex; align-items:center; gap:8px; cursor:pointer; background:${!isWebsite ? 'rgba(255,122,26,0.2)' : '#121829'}; padding:9px 16px; border-radius:8px; border:1px solid ${!isWebsite ? 'var(--orange)' : '#1E2842'}; color:#fff; font-weight:600">
+          <input type="radio" name="p_work_type" value="video" ${!isWebsite ? "checked" : ""}> 🎬 Video / Reel Work
+        </label>
+      </div>
+    </div>
+
+    <!-- Common Title & Order Fields -->
     <div>
       <label for="p_title_en">Project Title (English) *</label>
-      <input id="p_title_en" type="text" value="${esc(item?.title_en || "")}" required>
+      <input id="p_title_en" type="text" placeholder="e.g. Target Coaching Website / Physics Reel" value="${esc(item?.title_en || "")}" required>
     </div>
     <div>
       <label for="p_title_hi">Project Title (Hindi)</label>
-      <input id="p_title_hi" type="text" value="${esc(item?.title_hi || "")}">
-    </div>
-    <div>
-      <label for="p_category">Category</label>
-      <select id="p_category">
-        ${["reels", "website", "social", "other"].map(c => `<option value="${c}" ${item?.category === c ? "selected" : ""}>${c.toUpperCase()}</option>`).join("")}
-      </select>
+      <input id="p_title_hi" type="text" placeholder="e.g. टारगेट कोचिंग वेबसाइट" value="${esc(item?.title_hi || "")}">
     </div>
     <div>
       <label for="p_order">Display Order</label>
       <input id="p_order" type="number" value="${esc(item?.order || 1)}">
     </div>
-
-    <!-- Video Upload (Up to 1GB) -->
-    <div style="grid-column: 1 / -1; background:#090d16; padding:14px; border-radius:10px; border:1px solid #1f293d">
-      <label style="color:#fff; font-size:14px; margin-bottom:4px">
-        📹 Upload Video (Up to 1GB - MP4, WebM, MOV)
-      </label>
-      <p class="mut" style="font-size:12.5px; margin-bottom:8px">
-        Aap direct 1GB tak ka video upload kar sakte hain. Yeh seedha aapki website par video player me chalega.
-      </p>
-      <input type="file" id="p_video_file" accept="video/mp4,video/webm,video/quicktime,video/*">
-
-      <div id="p_upload_progress" style="display:none; margin-top:10px">
-        <div class="progress-bar-wrap">
-          <div id="p_progress_fill" class="progress-bar-fill"></div>
-        </div>
-        <span id="p_progress_text" class="mut" style="font-size:12px">Uploading: 0%</span>
-      </div>
-
-      ${currentMedia ? `
-        <div style="margin-top:10px; padding-top:10px; border-top:1px solid var(--line)">
-          <div class="mut" style="font-size:12px; margin-bottom:4px">Current Video: <b>${esc(currentMedia)}</b></div>
-          ${isVideoFile ? `
-            <video src="${esc(resolveMedia(currentMedia))}" controls preload="metadata" style="max-height:160px; max-width:100%; border-radius:6px; background:#000; display:block"></video>
-          ` : `
-            <a href="${esc(currentMedia)}" target="_blank" rel="noopener" style="font-size:13px">View Link ↗</a>
-          `}
-        </div>
-      ` : ""}
-    </div>
-
-    <div style="grid-column: 1 / -1">
-      <label for="p_media_url">Or External Video/Media URL (Optional)</label>
-      <input id="p_media_url" type="text" placeholder="https://..." value="${esc(currentMedia)}">
-      <span class="mut" style="font-size:11.5px">Video file upload karne par yeh automatically fill ho jayega.</span>
-    </div>
-
-    <div style="grid-column: 1 / -1">
-      <label for="p_thumb_url">Custom Thumbnail Image URL (Optional)</label>
-      <input id="p_thumb_url" type="text" placeholder="https://..." value="${esc(item?.thumbUrl || "")}">
-    </div>
-
-    <div class="chk" style="grid-column: 1 / -1">
+    <div class="chk">
       <input type="checkbox" id="p_visible" ${item?.visible !== false ? "checked" : ""}>
       <label for="p_visible" style="margin:0; cursor:pointer">Visible on Website</label>
     </div>
+
+    <!-- 1. WEBSITE WORK FIELDS -->
+    <div id="websiteFields" style="grid-column: 1 / -1; display: ${isWebsite ? 'grid' : 'none'}; gap: 14px; background:#0B132B; padding:14px; border-radius:10px; border:1px solid #1E3A8A">
+      <div style="font-weight:700; color:#60A5FA; font-size:14px">🌐 Website Details</div>
+      <div>
+        <label for="p_web_url" style="color:#fff">Live Website Link (URL) *</label>
+        <input id="p_web_url" type="text" placeholder="https://coaching.com ya https://mystore.in" value="${isWebsite ? esc(currentMedia) : ""}">
+        <span class="mut" style="font-size:11.5px">Client ki live website ka link jise visitor click karke open kar sake.</span>
+      </div>
+      <div>
+        <label for="p_web_thumb" style="color:#fff">Website Screenshot / Preview Image URL (Optional)</label>
+        <input id="p_web_thumb" type="text" placeholder="https://.../screenshot.jpg" value="${isWebsite ? esc(item?.thumbUrl || "") : ""}">
+        <span class="mut" style="font-size:11.5px">Website screenshot URL. Agar khali chhodenge to modern website mockup automatic lag jayega.</span>
+      </div>
+    </div>
+
+    <!-- 2. VIDEO WORK FIELDS -->
+    <div id="videoFields" style="grid-column: 1 / -1; display: ${!isWebsite ? 'grid' : 'none'}; gap: 14px; background:#181008; padding:14px; border-radius:10px; border:1px solid #7C2D12">
+      <div style="font-weight:700; color:#FDBA74; font-size:14px">🎬 Video Details</div>
+
+      <div>
+        <label for="p_video_cat">Video Type</label>
+        <select id="p_video_cat">
+          <option value="reels" ${item?.category === "reels" ? "selected" : ""}>Lecture Reel / Short</option>
+          <option value="video" ${item?.category === "video" ? "selected" : ""}>Full Video / Promo</option>
+          <option value="social" ${item?.category === "social" ? "selected" : ""}>Social Media Edit</option>
+        </select>
+      </div>
+
+      <!-- File upload -->
+      <div style="background:#090d16; padding:12px; border-radius:8px; border:1px solid #1f293d">
+        <label style="color:#fff; font-size:13.5px; margin-bottom:4px">
+          📹 Direct Video File Upload (Up to 1GB - MP4, WebM, MOV)
+        </label>
+        <input type="file" id="p_video_file" accept="video/mp4,video/webm,video/quicktime,video/*">
+
+        <div id="p_upload_progress" style="display:none; margin-top:10px">
+          <div class="progress-bar-wrap">
+            <div id="p_progress_fill" class="progress-bar-fill"></div>
+          </div>
+          <span id="p_progress_text" class="mut" style="font-size:12px">Uploading: 0%</span>
+        </div>
+
+        ${(!isWebsite && currentMedia) ? `
+          <div style="margin-top:10px; padding-top:10px; border-top:1px solid var(--line)">
+            <div class="mut" style="font-size:12px; margin-bottom:4px">Current: <b>${esc(currentMedia)}</b></div>
+            ${isVideoFile ? `
+              <video src="${esc(resolveMedia(currentMedia))}" controls preload="metadata" style="max-height:140px; max-width:100%; border-radius:6px; background:#000; display:block"></video>
+            ` : `
+              <a href="${esc(currentMedia)}" target="_blank" rel="noopener" style="font-size:13px">View Link ↗</a>
+            `}
+          </div>
+        ` : ""}
+      </div>
+
+      <div>
+        <label for="p_vid_url">Or YouTube / Instagram Reel Link (Optional)</label>
+        <input id="p_vid_url" type="text" placeholder="https://youtube.com/watch?v=... ya https://instagram.com/reel/..." value="${!isWebsite ? esc(currentMedia) : ""}">
+      </div>
+
+      <div>
+        <label for="p_vid_thumb">Custom Video Thumbnail URL (Optional)</label>
+        <input id="p_vid_thumb" type="text" placeholder="https://.../thumb.jpg" value="${!isWebsite ? esc(item?.thumbUrl || "") : ""}">
+      </div>
+    </div>
   `;
+
+  // Toggle switcher
+  const updateTypeView = type => {
+    const isW = type === "website";
+    $("#websiteFields").style.display = isW ? "grid" : "none";
+    $("#videoFields").style.display = !isW ? "grid" : "none";
+    $("#typeLabelWebsite").style.borderColor = isW ? "var(--blue)" : "#1E2842";
+    $("#typeLabelWebsite").style.background = isW ? "rgba(59,130,246,0.2)" : "#121829";
+    $("#typeLabelVideo").style.borderColor = !isW ? "var(--orange)" : "#1E2842";
+    $("#typeLabelVideo").style.background = !isW ? "rgba(255,122,26,0.2)" : "#121829";
+  };
+
+  $$('input[name="p_work_type"]').forEach(radio => {
+    radio.addEventListener("change", e => updateTypeView(e.target.value));
+  });
 
   const form = $("#f");
   const saveBtn = form.querySelector("button.cta");
@@ -723,52 +773,81 @@ function openPortfolioForm(title, item, onSave) {
 
   form.onsubmit = async e => {
     e.preventDefault();
-    const fileInput = $("#p_video_file");
-    const file = fileInput.files && fileInput.files[0];
 
-    let mediaUrl = $("#p_media_url").value.trim();
+    const workType = $('input[name="p_work_type"]:checked')?.value || "website";
+    const title_en = $("#p_title_en").value.trim();
+    const title_hi = $("#p_title_hi").value.trim();
+    const order = Number($("#p_order").value || 1);
+    const visible = $("#p_visible").checked;
 
-    // If file selected, upload with progress
-    if (file) {
-      if (file.size > 1024 * 1024 * 1024) {
-        return toast("Video file ka size 1GB se zyada hai", "error");
-      }
-
-      const progressBox = $("#p_upload_progress");
-      const progressFill = $("#p_progress_fill");
-      const progressText = $("#p_progress_text");
-
-      progressBox.style.display = "block";
-      saveBtn.disabled = true;
-
-      try {
-        const uploadRes = await A.uploadVideo(file, (percent, loaded, total) => {
-          progressFill.style.width = percent + "%";
-          const loadedMB = (loaded / (1024 * 1024)).toFixed(1);
-          const totalMB = (total / (1024 * 1024)).toFixed(1);
-          progressText.textContent = `Uploading: ${percent}% (${loadedMB} MB / ${totalMB} MB)...`;
-          saveBtn.textContent = `Uploading (${percent}%)...`;
-        });
-        mediaUrl = uploadRes.mediaUrl;
-      } catch (uploadErr) {
-        saveBtn.disabled = false;
-        saveBtn.textContent = origSaveText;
-        return toast("Video upload fail: " + uploadErr.message, "error");
-      }
+    if (!title_en) {
+      return toast("Project Title (English) zaroori hai", "error");
     }
 
-    if (!mediaUrl) {
-      return toast("Kripya ek video file upload karein ya URL daalein", "error");
+    let mediaUrl = "";
+    let thumbUrl = "";
+    let category = "website";
+
+    if (workType === "website") {
+      let webUrl = $("#p_web_url").value.trim();
+      if (!webUrl) {
+        return toast("Kripya Live Website ka URL daalein (e.g. https://...)", "error");
+      }
+      if (!/^https?:\/\//i.test(webUrl)) {
+        webUrl = "https://" + webUrl;
+      }
+      mediaUrl = webUrl;
+      thumbUrl = $("#p_web_thumb").value.trim();
+      category = "website";
+    } else {
+      category = $("#p_video_cat").value || "video";
+      thumbUrl = $("#p_vid_thumb").value.trim();
+      mediaUrl = $("#p_vid_url").value.trim();
+
+      const fileInput = $("#p_video_file");
+      const file = fileInput && fileInput.files && fileInput.files[0];
+
+      if (file) {
+        if (file.size > 1024 * 1024 * 1024) {
+          return toast("Video file ka size 1GB se zyada hai", "error");
+        }
+
+        const progressBox = $("#p_upload_progress");
+        const progressFill = $("#p_progress_fill");
+        const progressText = $("#p_progress_text");
+
+        progressBox.style.display = "block";
+        saveBtn.disabled = true;
+
+        try {
+          const uploadRes = await A.uploadVideo(file, (percent, loaded, total) => {
+            progressFill.style.width = percent + "%";
+            const loadedMB = (loaded / (1024 * 1024)).toFixed(1);
+            const totalMB = (total / (1024 * 1024)).toFixed(1);
+            progressText.textContent = `Uploading: ${percent}% (${loadedMB} MB / ${totalMB} MB)...`;
+            saveBtn.textContent = `Uploading (${percent}%)...`;
+          });
+          mediaUrl = uploadRes.mediaUrl;
+        } catch (uploadErr) {
+          saveBtn.disabled = false;
+          saveBtn.textContent = origSaveText;
+          return toast("Video upload fail: " + uploadErr.message, "error");
+        }
+      }
+
+      if (!mediaUrl) {
+        return toast("Kripya ek video file upload karein ya YouTube/Reel link daalein", "error");
+      }
     }
 
     const payload = {
-      title_en: $("#p_title_en").value.trim(),
-      title_hi: $("#p_title_hi").value.trim(),
-      category: $("#p_category").value,
-      order: Number($("#p_order").value || 1),
+      title_en,
+      title_hi,
+      category,
+      order,
       mediaUrl,
-      thumbUrl: $("#p_thumb_url").value.trim(),
-      visible: $("#p_visible").checked
+      thumbUrl,
+      visible
     };
 
     saveBtn.disabled = true;
@@ -784,7 +863,7 @@ function openPortfolioForm(title, item, onSave) {
 
     if (ok) {
       dlg.close();
-      toast("Portfolio saved successfully!", "success");
+      toast("Portfolio successfully save ho gaya!", "success");
       show("portfolio");
     }
   };
@@ -796,44 +875,99 @@ async function itemsView(m, col) {
   m.innerHTML = `<div class="loading-box"><div class="spinner"></div><p>Loading ${esc(col)}...</p></div>`;
 
   const items = (await safe(() => A.listItems(col))) || [];
+  let activePortFilter = "all";
 
-  m.innerHTML = `
-    <div class="row" style="margin-bottom:14px">
-      <h2 style="text-transform:capitalize">${esc(col)} Management</h2>
-      <button class="cta" id="addItemBtn">+ Add New ${col === "portfolio" ? "Video / Project" : esc(col.slice(0, -1))}</button>
-    </div>
-    <div id="colList">
-      ${items.map(i => {
-        const isVideo = i.mediaUrl && (i.mediaUrl.startsWith('/uploads/') || /\.(mp4|webm|mov|mkv)$/i.test(i.mediaUrl));
-        return `
-        <div class="card ${i.visible === false ? "off" : ""}" data-id="${esc(i._id)}">
-          <div class="row">
-            <div>
-              <b style="font-size:16px">${TITLE[col](i)}</b>
-              <div class="mut" style="margin-top:4px">
-                Order: ${esc(i.order || 0)}
-                ${i.visible === false ? ' · <span style="color:var(--red)">Hidden</span>' : ' · <span style="color:var(--grn)">Visible</span>'}
-                ${i.popular ? ' · <span style="color:var(--org)">⭐ Popular</span>' : ""}
-                ${i.category ? ` · <span class="tag">${esc(i.category)}</span>` : ""}
-                ${isVideo ? ' · <span class="tag" style="background:#065F46;color:#6EE7B7">📹 Direct Video</span>' : ""}
-                ${i.rating ? ` · Rating: ${"⭐".repeat(i.rating)}` : ""}
-              </div>
-              ${isVideo ? `
-                <div style="margin-top:8px">
-                  <video src="${esc(resolveMedia(i.mediaUrl))}" controls preload="metadata" style="max-height:140px;max-width:280px;border-radius:8px;background:#000;display:block"></video>
+  function renderList() {
+    const isPort = col === "portfolio";
+    const filtered = items.filter(i => {
+      if (!isPort || activePortFilter === "all") return true;
+      const isWeb = (i.category || "").toLowerCase() === "website";
+      if (activePortFilter === "website") return isWeb;
+      if (activePortFilter === "video") return !isWeb;
+      return true;
+    });
+
+    const webCount = items.filter(i => (i.category || "").toLowerCase() === "website").length;
+    const vidCount = items.filter(i => (i.category || "").toLowerCase() !== "website").length;
+
+    m.innerHTML = `
+      <div class="row" style="margin-bottom:14px">
+        <h2 style="text-transform:capitalize">${esc(col)} Management</h2>
+        <button class="cta" id="addItemBtn">+ Add New ${col === "portfolio" ? "Work / Project" : esc(col.slice(0, -1))}</button>
+      </div>
+
+      ${isPort ? `
+        <div style="display:flex; gap:10px; margin-bottom:16px; flex-wrap:wrap">
+          <button class="sec ${activePortFilter === 'all' ? 'active' : ''}" id="filterAll" style="font-size:13px; padding:6px 14px; ${activePortFilter === 'all' ? 'background:var(--blue);color:#fff;border-color:var(--blue)' : ''}">
+            All Projects (${items.length})
+          </button>
+          <button class="sec ${activePortFilter === 'website' ? 'active' : ''}" id="filterWeb" style="font-size:13px; padding:6px 14px; ${activePortFilter === 'website' ? 'background:var(--blue);color:#fff;border-color:var(--blue)' : ''}">
+            🌐 Websites (${webCount})
+          </button>
+          <button class="sec ${activePortFilter === 'video' ? 'active' : ''}" id="filterVid" style="font-size:13px; padding:6px 14px; ${activePortFilter === 'video' ? 'background:var(--orange);color:#fff;border-color:var(--orange)' : ''}">
+            🎬 Videos & Reels (${vidCount})
+          </button>
+        </div>
+      ` : ""}
+
+      <div id="colList">
+        ${filtered.map(i => {
+          const isWeb = (i.category || "").toLowerCase() === "website";
+          const isVideo = !isWeb && i.mediaUrl && (i.mediaUrl.startsWith('/uploads/') || /\.(mp4|webm|mov|mkv)$/i.test(i.mediaUrl));
+          return `
+          <div class="card ${i.visible === false ? "off" : ""}" data-id="${esc(i._id)}">
+            <div class="row">
+              <div>
+                <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px">
+                  ${isPort ? (isWeb
+                    ? '<span class="tag" style="background:#1E3A8A;color:#93C5FD;font-weight:700">🌐 WEBSITE</span>'
+                    : '<span class="tag" style="background:#7C2D12;color:#FDBA74;font-weight:700">🎬 VIDEO</span>') : ""}
+                  <b style="font-size:16px">${TITLE[col](i)}</b>
                 </div>
-              ` : (i.mediaUrl ? `<div class="mut" style="margin-top:2px">Link: <a href="${esc(i.mediaUrl)}" target="_blank" rel="noopener">${esc(i.mediaUrl)}</a></div>` : "")}
-            </div>
-            <div style="display:flex;gap:6px">
-              <button class="sec ed">Edit</button>
-              <button class="warn del">Delete</button>
+                <div class="mut" style="font-size:12.5px; margin-top:4px">
+                  Order: ${esc(i.order || 0)}
+                  ${i.visible === false ? ' · <span style="color:var(--red)">Hidden</span>' : ' · <span style="color:var(--grn)">Visible</span>'}
+                  ${i.popular ? ' · <span style="color:var(--org)">⭐ Popular</span>' : ""}
+                  ${!isPort && i.category ? ` · <span class="tag">${esc(i.category)}</span>` : ""}
+                  ${isWeb ? ` · Live URL: <a href="${esc(i.mediaUrl)}" target="_blank" rel="noopener" style="color:#60A5FA;text-decoration:underline">${esc(i.mediaUrl)} ↗</a>` : ""}
+                  ${!isPort && i.rating ? ` · Rating: ${"⭐".repeat(i.rating)}` : ""}
+                </div>
+                ${isVideo ? `
+                  <div style="margin-top:8px">
+                    <video src="${esc(resolveMedia(i.mediaUrl))}" controls preload="metadata" style="max-height:140px;max-width:280px;border-radius:8px;background:#000;display:block"></video>
+                  </div>
+                ` : (isWeb && i.thumbUrl ? `
+                  <div style="margin-top:8px">
+                    <img src="${esc(i.thumbUrl)}" style="max-height:90px;max-width:180px;border-radius:6px;object-fit:cover;border:1px solid #1f293d">
+                  </div>
+                ` : (!isWeb && i.mediaUrl ? `<div class="mut" style="margin-top:2px">Video Link: <a href="${esc(i.mediaUrl)}" target="_blank" rel="noopener">${esc(i.mediaUrl)}</a></div>` : ""))}
+              </div>
+              <div style="display:flex;gap:6px">
+                <button class="sec ed">Edit</button>
+                <button class="warn del">Delete</button>
+              </div>
             </div>
           </div>
-        </div>
-      `;
-      }).join("") || `<div class="card" style="text-align:center;padding:32px"><p class="mut">Kuch nahi hai. Seed chalayein ya naya add karein.</p></div>`}
-    </div>
-  `;
+        `;
+        }).join("") || `<div class="card" style="text-align:center;padding:32px"><p class="mut">Kuch nahi hai. Naya work add karein.</p></div>`}
+      </div>
+    `;
+
+    // Filter button actions
+    if (isPort) {
+      $("#filterAll").onclick = () => { activePortFilter = "all"; renderList(); };
+      $("#filterWeb").onclick = () => { activePortFilter = "website"; renderList(); };
+      $("#filterVid").onclick = () => { activePortFilter = "video"; renderList(); };
+    }
+
+    $("#addItemBtn").onclick = () => {
+      if (col === "portfolio") {
+        openPortfolioForm("Add Portfolio Project", defaults, d => A.saveItem(col, null, d));
+      } else {
+        openForm(`Add New ${col}`, FIELDS[col], defaults, d => A.saveItem(col, null, d));
+      }
+    };
+  }
 
   const defaults = {
     visible: true,
@@ -842,16 +976,10 @@ async function itemsView(m, col) {
     vertical: "local",
     period: "month",
     price: 0,
-    category: "reels"
+    category: "website"
   };
 
-  $("#addItemBtn").onclick = () => {
-    if (col === "portfolio") {
-      openPortfolioForm("Add Portfolio Video (Up to 1GB)", defaults, d => A.saveItem(col, null, d));
-    } else {
-      openForm(`Add New ${col}`, FIELDS[col], defaults, d => A.saveItem(col, null, d));
-    }
-  };
+  renderList();
 
   m.onclick = async e => {
     const c = e.target.closest(".card");
@@ -861,7 +989,7 @@ async function itemsView(m, col) {
 
     if (e.target.classList.contains("ed")) {
       if (col === "portfolio") {
-        openPortfolioForm("Edit Portfolio Video", it, d => A.saveItem(col, it._id, d));
+        openPortfolioForm((it.category || "").toLowerCase() === "website" ? "Edit Website Project" : "Edit Video / Reel Project", it, d => A.saveItem(col, it._id, d));
       } else {
         openForm(`Edit ${col}`, FIELDS[col], it, d => A.saveItem(col, it._id, d));
       }

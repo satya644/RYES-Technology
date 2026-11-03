@@ -298,7 +298,10 @@ function renderPortfolioCards(items, selectedCategory) {
   // Filter items
   const filtered = items.filter(item => {
     if (selectedCategory === "all") return true;
-    return (item.category || "").toLowerCase() === selectedCategory.toLowerCase();
+    const cat = (item.category || "").toLowerCase();
+    if (selectedCategory === "website") return cat === "website";
+    if (selectedCategory === "video") return cat !== "website";
+    return cat === selectedCategory.toLowerCase();
   });
 
   container.textContent = "";
@@ -335,6 +338,8 @@ function renderPortfolioCards(items, selectedCategory) {
       ? (item.title_hi || item.title_en || "Project Preview")
       : (item.title_en || item.title_hi || "Project Preview");
 
+    const isWebsite = (item.category || "").toLowerCase() === "website";
+
     // Media Box
     const mediaBox = document.createElement("div");
     mediaBox.className = "port-media-box";
@@ -342,11 +347,32 @@ function renderPortfolioCards(items, selectedCategory) {
     // Category Tag
     const categoryBadge = document.createElement("span");
     categoryBadge.className = "port-category-badge";
-    categoryBadge.textContent = item.category || "Project";
+    if (isWebsite) {
+      categoryBadge.textContent = "🌐 WEBSITE";
+      categoryBadge.style.background = "rgba(37, 99, 235, 0.9)";
+      categoryBadge.style.color = "#FFFFFF";
+    } else {
+      categoryBadge.textContent = item.category ? item.category.toUpperCase() : "🎬 VIDEO";
+      categoryBadge.style.background = "rgba(234, 88, 12, 0.9)";
+      categoryBadge.style.color = "#FFFFFF";
+    }
     mediaBox.appendChild(categoryBadge);
 
-    // 1. Direct Uploaded / Native Video File (HTML5 Video Player directly on website)
-    if (isVideoFile) {
+    // 1. Website Work (Screenshot with Direct Link)
+    if (isWebsite) {
+      const thumbImg = document.createElement("img");
+      thumbImg.loading = "lazy";
+      thumbImg.alt = itemTitle;
+      thumbImg.src = item.thumbUrl || "https://images.unsplash.com/photo-1547658719-da2b51169166?auto=format&fit=crop&w=800&q=80";
+      mediaBox.appendChild(thumbImg);
+
+      if (mediaUrl) {
+        mediaBox.style.cursor = "pointer";
+        mediaBox.addEventListener("click", () => window.open(mediaUrl, "_blank", "noopener"));
+      }
+    }
+    // 2. Direct Uploaded / Native Video File (HTML5 Video Player directly on website)
+    else if (isVideoFile) {
       const videoEl = document.createElement("video");
       videoEl.controls = true;
       videoEl.playsInline = true;
@@ -355,7 +381,7 @@ function renderPortfolioCards(items, selectedCategory) {
       videoEl.src = fullMediaUrl;
       mediaBox.appendChild(videoEl);
     }
-    // 2. YouTube Video (Thumbnail with Lightbox Modal)
+    // 3. YouTube Video (Thumbnail with Lightbox Modal)
     else if (ytId) {
       const thumbImg = document.createElement("img");
       thumbImg.loading = "lazy";
@@ -373,7 +399,7 @@ function renderPortfolioCards(items, selectedCategory) {
       mediaBox.style.cursor = "pointer";
       mediaBox.addEventListener("click", () => openVideoLightbox(ytId));
     }
-    // 3. Other External Media / Website Link
+    // 4. Other External Media Link
     else {
       const thumbImg = document.createElement("img");
       thumbImg.loading = "lazy";
@@ -400,11 +426,17 @@ function renderPortfolioCards(items, selectedCategory) {
     // Action button
     const actionBtn = document.createElement("button");
     actionBtn.type = "button";
-    actionBtn.className = "btn btn-outline";
     actionBtn.style.fontSize = "13px";
-    actionBtn.style.padding = "7px 14px";
+    actionBtn.style.padding = "8px 16px";
 
-    if (isVideoFile) {
+    if (isWebsite) {
+      actionBtn.className = "btn btn-blue";
+      actionBtn.textContent = t.portViewWebsite || (isHi ? "🌐 Live Website Dekhein ↗" : "🌐 View Live Website ↗");
+      actionBtn.addEventListener("click", () => {
+        if (mediaUrl) window.open(mediaUrl, "_blank", "noopener");
+      });
+    } else if (isVideoFile) {
+      actionBtn.className = "btn btn-outline";
       actionBtn.textContent = isHi ? "⛶ Fullscreen Me Play Karein" : "⛶ Play Fullscreen";
       actionBtn.addEventListener("click", () => {
         const v = mediaBox.querySelector("video");
@@ -415,9 +447,11 @@ function renderPortfolioCards(items, selectedCategory) {
         }
       });
     } else if (ytId) {
+      actionBtn.className = "btn btn-orange";
       actionBtn.textContent = t.portWatchBtn;
       actionBtn.addEventListener("click", () => openVideoLightbox(ytId));
     } else if (mediaUrl) {
+      actionBtn.className = "btn btn-outline";
       actionBtn.textContent = t.portViewBtn;
       actionBtn.addEventListener("click", () => window.open(mediaUrl, "_blank", "noopener"));
     } else {
@@ -431,42 +465,31 @@ function renderPortfolioCards(items, selectedCategory) {
 }
 
 /**
- * Setup Portfolio Dynamic Category Tabs
+ * Setup Portfolio Dynamic Category Tabs (Websites vs Videos Separation)
  */
 function setupPortfolioTabs(items) {
   const tabsContainer = $("#portfolioTabs");
   if (!tabsContainer) return;
-
-  const categories = new Set();
-  items.forEach(item => {
-    if (item.category) categories.add(item.category.trim());
-  });
-
-  // Re-build tabs safely
   tabsContainer.textContent = "";
 
-  const allTab = document.createElement("button");
-  allTab.type = "button";
-  allTab.className = "port-tab active";
-  allTab.textContent = I18N[currentLang]?.portAll || "All Work";
-  allTab.addEventListener("click", () => {
-    $$(".port-tab").forEach(b => b.classList.remove("active"));
-    allTab.classList.add("active");
-    activePortfolioCategory = "all";
-    renderPortfolioCards(portfolioCache, "all");
-  });
-  tabsContainer.appendChild(allTab);
+  const t = I18N[currentLang] || I18N.hi;
 
-  categories.forEach(cat => {
+  const tabs = [
+    { id: "all", label: t.portAll || "All Work" },
+    { id: "website", label: t.portWebsites || "🌐 Websites & Portals" },
+    { id: "video", label: t.portVideos || "🎬 Videos & Reels" }
+  ];
+
+  tabs.forEach(tab => {
     const tabBtn = document.createElement("button");
     tabBtn.type = "button";
-    tabBtn.className = "port-tab";
-    tabBtn.textContent = cat;
+    tabBtn.className = "port-tab" + (activePortfolioCategory === tab.id ? " active" : "");
+    tabBtn.textContent = tab.label;
     tabBtn.addEventListener("click", () => {
       $$(".port-tab").forEach(b => b.classList.remove("active"));
       tabBtn.classList.add("active");
-      activePortfolioCategory = cat;
-      renderPortfolioCards(portfolioCache, cat);
+      activePortfolioCategory = tab.id;
+      renderPortfolioCards(portfolioCache, tab.id);
     });
     tabsContainer.appendChild(tabBtn);
   });
